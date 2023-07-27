@@ -81,7 +81,12 @@ export default class Frame extends Component {
     if (this.props.mountTarget) {
       return doc.querySelector(this.props.mountTarget);
     }
-    return doc.body.children[0];
+
+    if(doc.body) {
+      return doc.body.children[0];
+    }
+
+    return null;
   }
 
   renderFrameContents() {
@@ -120,7 +125,10 @@ export default class Frame extends Component {
       const callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
       const mountTarget = this.getMountTarget();
 
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
+      if (mountTarget) {
+        ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
+      }
+
       resetWarnings();
     } else {
       setTimeout(this.renderFrameContents.bind(this), 0);
