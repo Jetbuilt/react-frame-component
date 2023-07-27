@@ -85,8 +85,9 @@ var Frame = React.createClass({
       var callback = initialRender ? this.props.contentDidMount : this.props.contentDidUpdate;
       var mountTarget = this.getMountTarget();
 
-
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
+      if(mountTarget) {
+        ReactDOM.unstable_renderSubtreeIntoContainer(this, contents, mountTarget, callback);
+      }
 
       resetWarnings();
     } else {
@@ -100,7 +101,11 @@ var Frame = React.createClass({
       return doc.querySelector(this.props.mountTarget);
     }
 
-    return doc.body.children[0];
+    if(doc.body) {
+      return doc.body.children[0];
+    }
+
+    return null;
   },
   getDoc: function() {
     return ReactDOM.findDOMNode(this).contentDocument;
